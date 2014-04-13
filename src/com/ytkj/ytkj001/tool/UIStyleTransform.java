@@ -24,9 +24,20 @@ public class UIStyleTransform {
 			return name;
 		}
 	}
+
 	private static final List<SupportedLaF> supportedLaFs = new ArrayList<SupportedLaF>();
-	public static final String NIMBUS_LAF_NAME = "Windows";//Windows  Nimbus
+	public static final String NIMBUS_LAF_NAME = "Windows";// Windows Nimbus
 	private static SupportedLaF nimbusLaF;
+	private static JFrame frame;
+
+	public static JFrame getframe() {
+		return frame;
+	}
+
+	public static void setframe(JFrame frame) {
+		frame = frame;
+	}
+
 	public static void initUI(JFrame frame) {
 		UIManager.LookAndFeelInfo[] installedLafs = UIManager
 				.getInstalledLookAndFeels();
@@ -52,6 +63,7 @@ public class UIStyleTransform {
 				// If ANYTHING weird happens, don't add this L&F
 			}
 		}
+		setframe(frame);
 	}
 
 }
