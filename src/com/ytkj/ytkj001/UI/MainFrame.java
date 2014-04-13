@@ -36,6 +36,7 @@ import com.ytkj.ytkj001.dao.MaterialDao;
 import com.ytkj.ytkj001.data.Material;
 import com.ytkj.ytkj001.data.MaterialRecord;
 import com.ytkj.ytkj001.module.TestTreeTableModel;
+import com.ytkj.ytkj001.other.DragDropRowTableUI;
 import com.ytkj.ytkj001.tool.FileSaveUtil;
 import com.ytkj.ytkj001.tool.Tool;
 import com.ytkj.ytkj001.tool.UIStyleTransform;
@@ -79,7 +80,7 @@ public class MainFrame extends JFrame {
 		UIStyleTransform.initUI(this);
 		CheckTreeTableManager manager = new CheckTreeTableManager(treeTable);
 		treeTable.setRootVisible(false); // 显示根结点
-
+		treeTable.setUI(new DragDropRowTableUI());
 		// treeTable.setCollapsedIcon(new
 		// ImageIcon(MainFrame.class.getResource("/image/20140407155217.jpg")));
 		treeTable.setLeafIcon(new ImageIcon(MainFrame.class
