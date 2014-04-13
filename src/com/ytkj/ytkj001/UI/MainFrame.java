@@ -36,13 +36,14 @@ import com.ytkj.ytkj001.dao.MaterialDao;
 import com.ytkj.ytkj001.data.Material;
 import com.ytkj.ytkj001.data.MaterialRecord;
 import com.ytkj.ytkj001.module.TestTreeTableModel;
+import com.ytkj.ytkj001.tool.FileSaveUtil;
 import com.ytkj.ytkj001.tool.Tool;
 import com.ytkj.ytkj001.tool.UIStyleTransform;
 
 public class MainFrame extends JFrame {
 
 	private JPanel contentPane;
-	//private MyTreeTableModel treeTableModel = new MyTreeTableModel();
+	// private MyTreeTableModel treeTableModel = new MyTreeTableModel();
 
 	private JXTreeTable treeTable = new JXTreeTable(new TestTreeTableModel(
 			createDummyData()));
@@ -77,18 +78,21 @@ public class MainFrame extends JFrame {
 		setTitle("当前用户：002");
 		UIStyleTransform.initUI(this);
 		CheckTreeTableManager manager = new CheckTreeTableManager(treeTable);
-		treeTable.setRootVisible(false); //  显示根结点
-		
-		
-		//treeTable.setCollapsedIcon(new ImageIcon(MainFrame.class.getResource("/image/20140407155217.jpg")));
-		treeTable.setLeafIcon(new ImageIcon(MainFrame.class.getResource("/image/20140407155217.jpg")));
-		treeTable.setOpenIcon(new ImageIcon(MainFrame.class.getResource("/image/20140407155217.jpg")));
-		treeTable.setClosedIcon(new ImageIcon(MainFrame.class.getResource("/image/20140407155217.jpg")));
-		
+		treeTable.setRootVisible(false); // 显示根结点
+
+		// treeTable.setCollapsedIcon(new
+		// ImageIcon(MainFrame.class.getResource("/image/20140407155217.jpg")));
+		treeTable.setLeafIcon(new ImageIcon(MainFrame.class
+				.getResource("/image/20140407155217.jpg")));
+		treeTable.setOpenIcon(new ImageIcon(MainFrame.class
+				.getResource("/image/20140407155217.jpg")));
+		treeTable.setClosedIcon(new ImageIcon(MainFrame.class
+				.getResource("/image/20140407155217.jpg")));
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 900, 600);
 		Tool.showFrameCenter(this);
-		//setSize(width, height)
+		// setSize(width, height)
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 
@@ -113,12 +117,12 @@ public class MainFrame extends JFrame {
 				System.exit(0);
 			}
 		});
-		
+
 		mnNewMenu.add(mntmNewMenuItem_2);
-		
+
 		JMenu menu = new JMenu("其他");
 		menuBar.add(menu);
-		
+
 		JMenuItem menuItem = new JMenuItem("帮助");
 		menuItem.addActionListener(new ActionListener() {
 
@@ -128,7 +132,7 @@ public class MainFrame extends JFrame {
 				new HelpDialog().setVisible(true);
 			}
 		});
-		
+
 		menu.add(menuItem);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -153,60 +157,67 @@ public class MainFrame extends JFrame {
 		JButton btnNewButton_1 = new JButton("搜索");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String xunhao=textField.getText().trim();
-				if(xunhao==null||"".equals(xunhao)){
-					//System.out.println("不能为空");
+				String xunhao = textField.getText().trim();
+				if (xunhao == null || "".equals(xunhao)) {
+					// System.out.println("不能为空");
 					errorLabel.setText("寻号不能为空");
 					errorLabel.setForeground(Color.RED);
 					return;
 				}
-				DefaultMutableTreeTableNode root=(DefaultMutableTreeTableNode)treeTable.getTreeTableModel().getRoot();
-				DefaultTreeTableModel model=(DefaultTreeTableModel)treeTable.getTreeTableModel();
-				int size=model.getChildCount(root);//得到孩子个数
-				
+				DefaultMutableTreeTableNode root = (DefaultMutableTreeTableNode) treeTable
+						.getTreeTableModel().getRoot();
+				DefaultTreeTableModel model = (DefaultTreeTableModel) treeTable
+						.getTreeTableModel();
+				int size = model.getChildCount(root);// 得到孩子个数
+
 				for (int i = 0; i < root.getChildCount(); i++) {
-					DefaultMutableTreeTableNode node=(DefaultMutableTreeTableNode)root.getChildAt(i);
-					Material material=(Material)node.getUserObject();
-					if(xunhao.equals(material.getXunhao())){
-						errorLabel.setText("寻号【"+xunhao+"】已经在检索结果中");
-						errorLabel.setForeground(new Color(25,168,8));//19A808
+					DefaultMutableTreeTableNode node = (DefaultMutableTreeTableNode) root
+							.getChildAt(i);
+					Material material = (Material) node.getUserObject();
+					if (xunhao.equals(material.getXunhao())) {
+						errorLabel.setText("寻号【" + xunhao + "】已经在检索结果中");
+						errorLabel.setForeground(new Color(25, 168, 8));// 19A808
 						return;
 					}
-					
+
 				}
-				MaterialService materialService=new MaterialService();
-				MaterialDao materialDao=new MaterialDao();
+				MaterialService materialService = new MaterialService();
+				MaterialDao materialDao = new MaterialDao();
 				materialService.setMaterialDao(materialDao);
-				List<MaterialRecord> materialRecords=materialService.match(xunhao);
-				if(materialRecords.size()==0){
+				List<MaterialRecord> materialRecords = materialService
+						.match(xunhao);
+				if (materialRecords.size() == 0) {
 					errorLabel.setText("未发现数据");
-					errorLabel.setForeground(new Color(25,168,8));//19A808
+					errorLabel.setForeground(new Color(25, 168, 8));// 19A808
 					return;
 				}
 				for (MaterialRecord materialRecord : materialRecords) {
-					DefaultMutableTreeTableNode yuanshinode=new DefaultMutableTreeTableNode(materialRecord.getMaterial());
-					//root.add(yuanshinode);
-					
+					DefaultMutableTreeTableNode yuanshinode = new DefaultMutableTreeTableNode(
+							materialRecord.getMaterial());
+					// root.add(yuanshinode);
+
 					model.insertNodeInto(yuanshinode, root, size);
-					
+
 					size++;
-					
-					int size2=model.getChildCount(yuanshinode);
+
+					int size2 = model.getChildCount(yuanshinode);
 					for (Material material : materialRecord.getMatchMaterials()) {
-						model.insertNodeInto(new DefaultMutableTreeTableNode(material), yuanshinode, size2);
+						model.insertNodeInto(new DefaultMutableTreeTableNode(
+								material), yuanshinode, size2);
 						size2++;
 					}
 				}
-				//treeTable.getTreeTableModel().
-				//treeTable.getTreeTableModel().
-				//treeTable.get
-				//DefaultTreeTableModel model=(DefaultTreeTableModel)treeTable.getTreeTableModel();
-				//model.
-				//model.setRoot(root);
+				// treeTable.getTreeTableModel().
+				// treeTable.getTreeTableModel().
+				// treeTable.get
+				// DefaultTreeTableModel
+				// model=(DefaultTreeTableModel)treeTable.getTreeTableModel();
+				// model.
+				// model.setRoot(root);
 			}
 		});
 		panel_1.add(btnNewButton_1);
-		
+
 		errorLabel = new JLabel("");
 		panel_1.add(errorLabel);
 
@@ -256,15 +267,15 @@ public class MainFrame extends JFrame {
 		FlowLayout flowLayout_3 = (FlowLayout) panel_6.getLayout();
 		flowLayout_3.setAlignment(FlowLayout.RIGHT);
 		panel_3.add(panel_6);
-		
+
 		JButton btnNewButton_3 = new JButton("展开");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				 treeTable.expandAll();  //  展开全部节点
+				treeTable.expandAll(); // 展开全部节点
 			}
 		});
 		panel_6.add(btnNewButton_3);
-		
+
 		JButton btnNewButton_2 = new JButton("收缩");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -273,7 +284,17 @@ public class MainFrame extends JFrame {
 		});
 		panel_6.add(btnNewButton_2);
 
-		JButton btnNewButton = new JButton("手动匹配");
+		JButton btnNewButton = new JButton("导出Excel");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int cout = treeTable.getColumnCount();
+				String[] columnname = new String[cout];
+				for (int i = 0; i < cout; i++) {
+					columnname[i] = treeTable.getColumnName(i);
+				}
+				FileSaveUtil.save(UIStyleTransform.getframe(), columnname);
+			}
+		});
 		panel_6.add(btnNewButton);
 	}
 
