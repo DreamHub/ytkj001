@@ -32,6 +32,7 @@ public class CheckTreeTableManager extends MouseAdapter implements TreeSelection
         tree.setCellRenderer(new DefaultTreeRenderer(new CheckTreeCellProvider(selectionModel)));
         treeTable.addMouseListener(this);
         selectionModel.addTreeSelectionListener(this);
+        treetable.setDragEnabled(true);
     }
 
     @Override
@@ -58,8 +59,16 @@ public class CheckTreeTableManager extends MouseAdapter implements TreeSelection
             treetable.repaint();
         }
     }
+    
 
-    public CheckTreeSelectionModel getSelectionModel() {
+    @Override
+	public void mouseDragged(MouseEvent e) {
+		// TODO Auto-generated method stub
+		//super.mouseDragged(e);
+    	System.out.println("sssssssssssss");
+	}
+
+	public CheckTreeSelectionModel getSelectionModel() {
         return selectionModel;
     }
 
