@@ -310,7 +310,7 @@ public class MainFrame extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int cout = treeTable.getColumnCount();
-				if (treeTable.getRowCount() < 0) {
+				if (treeTable.getRowCount() <= 0) {
 					return;
 				}
 				String[] columnname = new String[cout];
