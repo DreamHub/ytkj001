@@ -11,6 +11,7 @@ import javax.swing.table.TableModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import org.jdesktop.swingx.JXTreeTable;
 import org.jdesktop.swingx.treetable.DefaultTreeTableModel;
 import org.jdesktop.swingx.treetable.TreeTableModel;
 
@@ -21,12 +22,12 @@ public class DragDropRowTableUI extends BasicTableUI {
 	private int dyOffset;
 	private TreeTableModel treeTableModel;
 	private TreeSelectionModel treeSelectionModel;
-	
 
-	public DragDropRowTableUI(TreeTableModel treeTableModel,TreeSelectionModel treeSelectionModel) {
+	public DragDropRowTableUI(TreeTableModel treeTableModel,
+			TreeSelectionModel treeSelectionModel) {
 		super();
 		this.treeTableModel = treeTableModel;
-		this.treeSelectionModel=treeSelectionModel;
+		this.treeSelectionModel = treeSelectionModel;
 	}
 
 	protected MouseInputListener createMouseInputListener() {
@@ -62,23 +63,23 @@ public class DragDropRowTableUI extends BasicTableUI {
 
 		public void mouseDragged(MouseEvent e) {
 			int fromRow = table.getSelectedRow();
-			//treeTableModel.ge
-			TreePath treepath=treeSelectionModel.getSelectionPath();
-			
-			//Object obj=treepath.getLastPathComponent();
-			//treeSelectionModel.get
-			if(treepath==null||treepath.getPathCount()!=3){
+			// treeTableModel.ge
+			TreePath treepath = treeSelectionModel.getSelectionPath();
+
+			// Object obj=treepath.getLastPathComponent();
+			// treeSelectionModel.get
+			if (treepath == null || treepath.getPathCount() != 3) {
 				return;
 			}
-			
-			DefaultTreeTableModel defaultmodel = (DefaultTreeTableModel)treeTableModel;
-			
-			///treeTableModel.isLeaf(treepath);
-			
-			//System.out.println(treeTableModel.isLeaf(treepath));
-			//treeTableModel.get
-			//model.getPathToRoot(aNode);
-			
+
+			DefaultTreeTableModel defaultmodel = (DefaultTreeTableModel) treeTableModel;
+
+			// /treeTableModel.isLeaf(treepath);
+
+			// System.out.println(treeTableModel.isLeaf(treepath));
+			// treeTableModel.get
+			// model.getPathToRoot(aNode);
+
 			if (fromRow >= 0) {
 				draggingRow = true;
 				int rowHeight = table.getRowHeight();
@@ -96,20 +97,19 @@ public class DragDropRowTableUI extends BasicTableUI {
 				}
 
 				if (toRow >= 0 && toRow < table.getRowCount()) {
-					TableModel model = table.getModel();
+					JXTreeTable treetable = (JXTreeTable) table;
+					for (int i = 0; i < treetable.getColumnCount(); i++) {
+						Object fromValue = treetable.getValueAt(fromRow, i);
+						Object toValue = treetable.getValueAt(toRow, i);
 
-					for (int i = 0; i < model.getColumnCount(); i++) {
-						Object fromValue = model.getValueAt(fromRow, i);
-						Object toValue = model.getValueAt(toRow, i);
-
-						model.setValueAt(toValue, fromRow, i);
-						model.setValueAt(fromValue, toRow, i);
+						treetable.setValueAt(toValue, fromRow, i);
+						treetable.setValueAt(fromValue, toRow, i);
 					}
 					table.setRowSelectionInterval(toRow, toRow);
 					startDragPoint = yMousePoint;
 				}
 				dyOffset = (startDragPoint - yMousePoint) * -1;
-				System.out.println("dyOffset:" + dyOffset);
+				// System.out.println("dyOffset:" + dyOffset);
 				table.repaint();
 			}
 		}
