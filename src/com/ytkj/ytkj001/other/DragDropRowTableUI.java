@@ -15,6 +15,8 @@ import org.jdesktop.swingx.JXTreeTable;
 import org.jdesktop.swingx.treetable.DefaultTreeTableModel;
 import org.jdesktop.swingx.treetable.TreeTableModel;
 
+import com.ytkj.ytkj001.data.Material;
+
 public class DragDropRowTableUI extends BasicTableUI {
 
 	private boolean draggingRow = false;
@@ -22,12 +24,12 @@ public class DragDropRowTableUI extends BasicTableUI {
 	private int dyOffset;
 	private TreeTableModel treeTableModel;
 	private TreeSelectionModel treeSelectionModel;
+	
 
-	public DragDropRowTableUI(TreeTableModel treeTableModel,
-			TreeSelectionModel treeSelectionModel) {
+	public DragDropRowTableUI(TreeTableModel treeTableModel,TreeSelectionModel treeSelectionModel) {
 		super();
 		this.treeTableModel = treeTableModel;
-		this.treeSelectionModel = treeSelectionModel;
+		this.treeSelectionModel=treeSelectionModel;
 	}
 
 	protected MouseInputListener createMouseInputListener() {
@@ -63,23 +65,25 @@ public class DragDropRowTableUI extends BasicTableUI {
 
 		public void mouseDragged(MouseEvent e) {
 			int fromRow = table.getSelectedRow();
-			// treeTableModel.ge
-			TreePath treepath = treeSelectionModel.getSelectionPath();
-
-			// Object obj=treepath.getLastPathComponent();
-			// treeSelectionModel.get
-			if (treepath == null || treepath.getPathCount() != 3) {
+			//treeTableModel.ge
+			TreePath treepath=treeSelectionModel.getSelectionPath();
+			
+			//Object obj=treepath.getLastPathComponent();
+			//treeSelectionModel.get
+			if(treepath==null||treepath.getPathCount()!=3){
 				return;
 			}
-
-			DefaultTreeTableModel defaultmodel = (DefaultTreeTableModel) treeTableModel;
-
-			// /treeTableModel.isLeaf(treepath);
-
-			// System.out.println(treeTableModel.isLeaf(treepath));
-			// treeTableModel.get
-			// model.getPathToRoot(aNode);
-
+			
+			DefaultTreeTableModel defaultmodel = (DefaultTreeTableModel)treeTableModel;
+			//defaultmodel.getValueAt(node, column)
+			//defaultmodel.setValueAt(value, node, column)
+			///treeTableModel.isLeaf(treepath);
+			//defaultmodel.valueForPathChanged(path, newValue)
+			//System.out.println(treeTableModel.isLeaf(treepath));
+			//treeTableModel.get
+			//model.getPathToRoot(aNode);
+			//defaultmodel.valueForPathChanged(path, newValue)
+			
 			if (fromRow >= 0) {
 				draggingRow = true;
 				int rowHeight = table.getRowHeight();
@@ -95,21 +99,57 @@ public class DragDropRowTableUI extends BasicTableUI {
 					// Move row down
 					toRow = fromRow + 1;
 				}
+				JXTreeTable treeTable =(JXTreeTable)table;
 
 				if (toRow >= 0 && toRow < table.getRowCount()) {
-					JXTreeTable treetable = (JXTreeTable) table;
-					for (int i = 0; i < treetable.getColumnCount(); i++) {
-						Object fromValue = treetable.getValueAt(fromRow, i);
-						Object toValue = treetable.getValueAt(toRow, i);
+					TableModel model = table.getModel();
+					
+					Material fromObj=new Material();
+					Material toObj=new Material();
+					for (int i = 0; i < treeTable.getColumnCount(); i++) {
+						
+						Object fromValue = treeTable.getValueAt(fromRow, i);
+						System.out.println("fromValue:"+fromValue);
+						Object toValue = treeTable.getValueAt(toRow, i);
+						System.out.println("toValue:"+toValue);
+						//treeTable.setValueAt(toValue, fromRow, i);
+						//treeTable.setValueAt(fromValue, toRow, i);
+						switch (i) {
+						case 0:
+							fromObj.setLiaohao((String)(treeTable.getValueAt(fromRow, i)));
+							toObj.setLiaohao((String)(treeTable.getValueAt(toRow, i)));
+							break;
+						case 1:
+							fromObj.setXunhao((String)(treeTable.getValueAt(fromRow, i)));
+							toObj.setXunhao((String)(treeTable.getValueAt(toRow, i)));
+							break;
+						case 2:
+							fromObj.setYouxianji((String)(treeTable.getValueAt(fromRow, i)));
+							toObj.setYouxianji((String)(treeTable.getValueAt(toRow, i)));
+							break;
+						case 3:
+							fromObj.setMiaoshu((String)(treeTable.getValueAt(fromRow, i)));
+							toObj.setMiaoshu((String)(treeTable.getValueAt(toRow, i)));
+							break;
+						case 4:
+							fromObj.setTidaixiangmuzu((String)(treeTable.getValueAt(fromRow, i)));
+							toObj.setTidaixiangmuzu((String)(treeTable.getValueAt(toRow, i)));
+							break;
 
-						treetable.setValueAt(toValue, fromRow, i);
-						treetable.setValueAt(fromValue, toRow, i);
+						default:
+							break;
+						}
+						
+						//model.setValueAt(toValue, fromRow, i);
+						//model.setValueAt(fromValue, toRow, i);
 					}
+					defaultmodel.valueForPathChanged(treeTable.getPathForRow(fromRow), toObj);
+					defaultmodel.valueForPathChanged(treeTable.getPathForRow(toRow), fromObj);
 					table.setRowSelectionInterval(toRow, toRow);
 					startDragPoint = yMousePoint;
 				}
 				dyOffset = (startDragPoint - yMousePoint) * -1;
-				// System.out.println("dyOffset:" + dyOffset);
+				System.out.println("dyOffset:" + dyOffset);
 				table.repaint();
 			}
 		}
