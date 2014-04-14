@@ -106,6 +106,15 @@ public class DragDropRowTableUI extends BasicTableUI {
 					
 					Material fromObj=new Material();
 					Material toObj=new Material();
+					
+					TreePath path1=treeTable.getPathForRow(fromRow);
+					TreePath path2= treeTable.getPathForRow(toRow);
+					if(path1==null||path1.getPathCount()!=3){
+						return;
+					}
+					if(path2==null||path2.getPathCount()!=3){
+						return;
+					}
 					for (int i = 0; i < treeTable.getColumnCount(); i++) {
 						
 						Object fromValue = treeTable.getValueAt(fromRow, i);
