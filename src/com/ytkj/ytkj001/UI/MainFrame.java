@@ -102,7 +102,7 @@ public class MainFrame extends JFrame {
 		// treeTable.setCollapsedIcon(new
 		// ImageIcon(MainFrame.class.getResource("/image/20140407155217.jpg")));
 		
-		treeTable.setUI(new DragDropRowTableUI());
+		treeTable.setUI(new DragDropRowTableUI(treeTable.getTreeTableModel(),treeTable.getTreeSelectionModel()));
 		
 		treeTable.setLeafIcon(new ImageIcon(MainFrame.class
 				.getResource("/image/20140407155217.jpg")));

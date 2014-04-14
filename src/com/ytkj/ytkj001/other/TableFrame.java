@@ -24,7 +24,7 @@ public class TableFrame extends JFrame {
 			
 		};
 		final JTable table=new JTable(dm);
-		table.setUI(new DragDropRowTableUI());
+		//table.setUI(new DragDropRowTableUI());
 		for(int i=0;i<10;i++){
 			dm.addRow(new Object[]{i,i+"string"});
 		}

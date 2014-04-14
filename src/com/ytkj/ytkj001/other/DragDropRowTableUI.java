@@ -3,16 +3,31 @@ package com.ytkj.ytkj001.other;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+
 import javax.swing.JComponent;
 import javax.swing.event.MouseInputListener;
 import javax.swing.plaf.basic.BasicTableUI;
 import javax.swing.table.TableModel;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
+
+import org.jdesktop.swingx.treetable.DefaultTreeTableModel;
+import org.jdesktop.swingx.treetable.TreeTableModel;
 
 public class DragDropRowTableUI extends BasicTableUI {
 
 	private boolean draggingRow = false;
 	private int startDragPoint;
 	private int dyOffset;
+	private TreeTableModel treeTableModel;
+	private TreeSelectionModel treeSelectionModel;
+	
+
+	public DragDropRowTableUI(TreeTableModel treeTableModel,TreeSelectionModel treeSelectionModel) {
+		super();
+		this.treeTableModel = treeTableModel;
+		this.treeSelectionModel=treeSelectionModel;
+	}
 
 	protected MouseInputListener createMouseInputListener() {
 		return new DragDropRowMouseInputHandler();
@@ -47,7 +62,23 @@ public class DragDropRowTableUI extends BasicTableUI {
 
 		public void mouseDragged(MouseEvent e) {
 			int fromRow = table.getSelectedRow();
-
+			//treeTableModel.ge
+			TreePath treepath=treeSelectionModel.getSelectionPath();
+			
+			//Object obj=treepath.getLastPathComponent();
+			//treeSelectionModel.get
+			if(treepath==null||treepath.getPathCount()!=3){
+				return;
+			}
+			
+			DefaultTreeTableModel defaultmodel = (DefaultTreeTableModel)treeTableModel;
+			
+			///treeTableModel.isLeaf(treepath);
+			
+			//System.out.println(treeTableModel.isLeaf(treepath));
+			//treeTableModel.get
+			//model.getPathToRoot(aNode);
+			
 			if (fromRow >= 0) {
 				draggingRow = true;
 				int rowHeight = table.getRowHeight();
