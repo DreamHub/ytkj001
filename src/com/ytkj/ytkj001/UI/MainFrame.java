@@ -101,9 +101,10 @@ public class MainFrame extends JFrame {
 		treeTable.setRootVisible(false); // 显示根结点
 		// treeTable.setCollapsedIcon(new
 		// ImageIcon(MainFrame.class.getResource("/image/20140407155217.jpg")));
-		
-		treeTable.setUI(new DragDropRowTableUI(treeTable.getTreeTableModel(),treeTable.getTreeSelectionModel()));
-		
+
+		treeTable.setUI(new DragDropRowTableUI(treeTable.getTreeTableModel(),
+				treeTable.getTreeSelectionModel()));
+
 		treeTable.setLeafIcon(new ImageIcon(MainFrame.class
 				.getResource("/image/20140407155217.jpg")));
 		treeTable.setOpenIcon(new ImageIcon(MainFrame.class
@@ -309,6 +310,9 @@ public class MainFrame extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int cout = treeTable.getColumnCount();
+				if (cout < 0) {
+					return;
+				}
 				String[] columnname = new String[cout];
 				for (int i = 0; i < cout; i++) {
 					columnname[i] = treeTable.getColumnName(i);
