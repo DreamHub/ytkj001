@@ -11,7 +11,8 @@ import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 
 public class ExcelUtil {
-	public static Boolean createExcel(OutputStream os, String[] name) {
+	public static Boolean createExcel(OutputStream os, String[] name,
+			String[][] datas) {
 		try {
 			// 创建工作薄
 			WritableWorkbook workbook = Workbook.createWorkbook(os);
@@ -21,11 +22,35 @@ public class ExcelUtil {
 			WritableFont color = new WritableFont(WritableFont.ARIAL);// 选择字体
 			color.setColour(Colour.BLACK);// 设置字体颜色为黑色
 			WritableCellFormat colorFormat = new WritableCellFormat(color);
-			colorFormat.setWrap(true);
 			for (int i = 0; i < name.length; i++) {
 				Label columnname = new Label(i, 0, name[i], colorFormat);
-				sheet.setColumnView(i, 20);
+				sheet.setColumnView(i, 28);
 				sheet.addCell(columnname);
+			}
+			WritableFont format = new WritableFont(WritableFont.ARIAL);// 选择字体
+			format.setColour(Colour.GRAY_50);// 设置字体颜色为灰色
+			WritableCellFormat Format = new WritableCellFormat(format);
+			for (int i = 0; i < datas.length; i++) {
+				Boolean Flag = false;
+				for (int j = datas[1].length - 1; j < datas[1].length; j++) {
+					if ("1".equals(datas[i][j]))
+						Flag = true;
+					else
+						Flag = false;
+				}
+				if (Flag) {
+					for (int j = 0; j < datas[1].length - 1; j++) {
+						Label columnname = new Label(j, i + 1, datas[i][j],
+								colorFormat);
+						sheet.addCell(columnname);
+					}
+				} else {
+					for (int j = 0; j < datas[1].length - 1; j++) {
+						Label columnname = new Label(j, i + 1, datas[i][j],
+								Format);
+						sheet.addCell(columnname);
+					}
+				}
 			}
 			// WritableFont font2 = new WritableFont(WritableFont.ARIAL, 14,
 			// WritableFont.NO_BOLD, false, UnderlineStyle.NO_UNDERLINE,
@@ -77,5 +102,4 @@ public class ExcelUtil {
 		}
 
 	}
-
 }

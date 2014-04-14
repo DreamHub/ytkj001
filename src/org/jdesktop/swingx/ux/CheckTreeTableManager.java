@@ -32,6 +32,7 @@ public class CheckTreeTableManager extends MouseAdapter implements TreeSelection
         tree.setCellRenderer(new DefaultTreeRenderer(new CheckTreeCellProvider(selectionModel)));
         treeTable.addMouseListener(this);
         selectionModel.addTreeSelectionListener(this);
+        
         treetable.setDragEnabled(true);
     }
 
@@ -41,10 +42,9 @@ public class CheckTreeTableManager extends MouseAdapter implements TreeSelection
         if (path == null) {
             return;
         }
-        if (me.getX() > tree.getPathBounds(path).x + hotspot) {
-            return;
-        }
-
+//        if (me.getX() > tree.getPathBounds(path).x + hotspot) {
+//            return;
+//        }
         boolean selected = selectionModel.isPathSelected(path, true);
         selectionModel.removeTreeSelectionListener(this);
 
@@ -59,16 +59,8 @@ public class CheckTreeTableManager extends MouseAdapter implements TreeSelection
             treetable.repaint();
         }
     }
-    
 
-    @Override
-	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
-		//super.mouseDragged(e);
-    	System.out.println("sssssssssssss");
-	}
-
-	public CheckTreeSelectionModel getSelectionModel() {
+    public CheckTreeSelectionModel getSelectionModel() {
         return selectionModel;
     }
 

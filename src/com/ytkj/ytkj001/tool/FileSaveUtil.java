@@ -14,7 +14,7 @@ public class FileSaveUtil {
 	private static String filesave = null;// 用于存放打开文件地址 和文件名
 	private static String filesavename = null;
 
-	public static void save(Frame parent, String[] name) {
+	public static void save(Frame parent, String[] name, String[][] datas) {
 		FileDialog filedialog_save = new FileDialog(parent, "保存文件");
 		filedialog_save.setFile(".xls");
 		filedialog_save.setMode(FileDialog.SAVE);
@@ -28,7 +28,8 @@ public class FileSaveUtil {
 				if (file.exists()) {
 					file.delete();
 				}
-				flag = ExcelUtil.createExcel(new FileOutputStream(file), name);
+				flag = ExcelUtil.createExcel(new FileOutputStream(file), name,
+						datas);
 			} catch (Exception e) {
 				flag = false;
 			}

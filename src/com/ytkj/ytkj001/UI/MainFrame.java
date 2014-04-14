@@ -1,13 +1,23 @@
 package com.ytkj.ytkj001.UI;
 
 import java.awt.BorderLayout;
+import java.awt.Checkbox;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyVetoException;
+import java.beans.VetoableChangeListener;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -25,10 +35,18 @@ import javax.swing.JTextField;
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.table.TableCellEditor;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
 import org.jdesktop.swingx.JXTreeTable;
+import org.jdesktop.swingx.calendar.DateSelectionModel.SelectionMode;
 import org.jdesktop.swingx.treetable.DefaultMutableTreeTableNode;
 import org.jdesktop.swingx.treetable.DefaultTreeTableModel;
+import org.jdesktop.swingx.treetable.TreeTableNode;
+import org.jdesktop.swingx.ux.CheckTreeSelectionModel;
 import org.jdesktop.swingx.ux.CheckTreeTableManager;
 
 import com.ytkj.ytkj001.Service.MaterialService;
@@ -48,6 +66,7 @@ public class MainFrame extends JFrame {
 
 	private JXTreeTable treeTable = new JXTreeTable(new TestTreeTableModel(
 			createDummyData()));
+	CheckTreeTableManager manager = null;
 
 	private DefaultMutableTreeTableNode createDummyData() {
 		List<Material> materials = new MaterialDao().findAll();
@@ -78,18 +97,19 @@ public class MainFrame extends JFrame {
 	public MainFrame() {
 		setTitle("当前用户：002");
 		UIStyleTransform.initUI(this);
-		CheckTreeTableManager manager = new CheckTreeTableManager(treeTable);
+		manager = new CheckTreeTableManager(treeTable);
 		treeTable.setRootVisible(false); // 显示根结点
-		treeTable.setUI(new DragDropRowTableUI());
 		// treeTable.setCollapsedIcon(new
 		// ImageIcon(MainFrame.class.getResource("/image/20140407155217.jpg")));
+		
+		treeTable.setUI(new DragDropRowTableUI());
+		
 		treeTable.setLeafIcon(new ImageIcon(MainFrame.class
 				.getResource("/image/20140407155217.jpg")));
 		treeTable.setOpenIcon(new ImageIcon(MainFrame.class
 				.getResource("/image/20140407155217.jpg")));
 		treeTable.setClosedIcon(new ImageIcon(MainFrame.class
 				.getResource("/image/20140407155217.jpg")));
-
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 900, 600);
 		Tool.showFrameCenter(this);
@@ -293,7 +313,40 @@ public class MainFrame extends JFrame {
 				for (int i = 0; i < cout; i++) {
 					columnname[i] = treeTable.getColumnName(i);
 				}
-				FileSaveUtil.save(UIStyleTransform.getframe(), columnname);
+				DefaultMutableTreeTableNode root = (DefaultMutableTreeTableNode) treeTable
+						.getTreeTableModel().getRoot();
+				DefaultTreeTableModel model = (DefaultTreeTableModel) treeTable
+						.getTreeTableModel();
+				int size = model.getChildCount(root);// 得到孩子个数
+				int[] counts = new int[root.getChildCount()];
+				counts[0] = 0;
+				for (int i = 1; i < root.getChildCount(); i++) {
+					DefaultMutableTreeTableNode node = (DefaultMutableTreeTableNode) root
+							.getChildAt(i);
+					counts[i] += node.getChildCount() + i;
+				}
+				Boolean flag = false;
+				Boolean[] bflag = new Boolean[treeTable.getRowCount()];
+				for (int i = 0; i < treeTable.getRowCount(); i++) {
+					TreePath path = treeTable.getPathForRow(i);
+					for (int j = 0; j < root.getChildCount(); j++) {
+						if (i == counts[j]) {
+							flag = true;
+							break;
+						} else {
+							flag = false;
+						}
+					}
+					if (flag) {
+						bflag[i] = true;
+					} else {
+						bflag[i] = manager.getSelectionModel().isPathSelected(
+								path, true);
+					}
+				}
+				MaterialService service = new MaterialService();
+				FileSaveUtil.save(UIStyleTransform.getframe(), columnname,
+						service.productdata(treeTable, bflag));
 			}
 		});
 		panel_6.add(btnNewButton);

@@ -45,7 +45,7 @@ public class CheckTreeCellProvider extends ComponentProvider<JPanel> {
             if (selectionModel.isPathSelected(path, true)) {
                 _checkBox.setState(Boolean.TRUE);
             } else if (selectionModel.isPartiallySelected(path)) {
-                _checkBox.setState(null);   //  注意“部分选中”状态的API
+                _checkBox.setState(Boolean.TRUE);   //  注意“部分选中”状态的API
             } else {
                 _checkBox.setState(Boolean.FALSE);
             }
