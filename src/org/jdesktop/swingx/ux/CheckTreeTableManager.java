@@ -33,7 +33,7 @@ public class CheckTreeTableManager extends MouseAdapter implements TreeSelection
         treeTable.addMouseListener(this);
         selectionModel.addTreeSelectionListener(this);
         
-        //treetable.setDragEnabled(true);
+        treetable.setDragEnabled(true);
     }
 
     @Override
