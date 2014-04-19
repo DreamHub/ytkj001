@@ -326,8 +326,8 @@ public class MainFrame extends JFrame {
 				counts[0] = 0;
 				for (int i = 1; i < root.getChildCount(); i++) {
 					DefaultMutableTreeTableNode node = (DefaultMutableTreeTableNode) root
-							.getChildAt(i);
-					counts[i] += node.getChildCount() + i;
+							.getChildAt(i - 1);
+					counts[i] = counts[i - 1] + node.getChildCount() + 1;
 				}
 				Boolean flag = false;
 				Boolean[] bflag = new Boolean[treeTable.getRowCount()];
